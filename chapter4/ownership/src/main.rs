@@ -12,6 +12,18 @@ fn main() {
     let s2 = String::from("s2 Hello");
     let s2 = takes_and_gives_back(s2);
     println!("{}", s2);
+
+    {
+        let s = String::from("hello");
+        let (_s, _length) = calculate_length_annoying(s);
+    }
+    {
+        let s = String::from("hello");
+        // not move ownership by using reference
+        // it called `borrowing`
+        let _length = calculate_length(&s);
+    }
+        
 }
 
 fn move_ownership() {
@@ -39,3 +51,20 @@ fn taken_ownership(some_string: String) {
 fn takes_and_gives_back(a_string: String) -> String {
     a_string
 }
+
+fn calculate_length_annoying(s: String) -> (String, usize) {
+    let length = s.len();
+    (s, length)
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+
+// compile error occuer: missing lifetime specifier
+/*
+fn dangle() -> &String {
+    let s = String::from("Hello");
+    &s
+}
+*/
